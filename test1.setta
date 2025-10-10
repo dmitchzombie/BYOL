@@ -1,0 +1,6 @@
+let A = {1, 2, 3};
+let B = {3, 4, 5};
+
+def unionAll(X, Y) = X union Y;
+
+print unionAll(A, B);
