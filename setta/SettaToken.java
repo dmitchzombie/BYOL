@@ -1,6 +1,6 @@
 package setta;
 
-class SettaToken {
+public class SettaToken {
     final SettaTokenType type;
     final String lexeme;
     final Object literal;

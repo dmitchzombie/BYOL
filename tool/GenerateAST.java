@@ -14,20 +14,20 @@ public class GenerateAST {
     String outputDir = args[0];
 
     defineAst(outputDir, "Expr", Arrays.asList(
-        "Binary        : Expr left, Token operator, Expr right",
-        "Unary         : Token operator, Expr right",
+        "Binary        : Expr left, SettaToken operator, Expr right",
+        "Unary         : SettaToken operator, Expr right",
         "Literal       : Object value",
-        "Variable      : Token name",
+        "Variable      : SettaToken name",
         "Grouping      : Expr expression",
         "SetLiteral    : List<Expr> elements",
-        "Comprehension : Expr expr, Token variable, Expr inSet, Expr condition",
-        "Cardinality   : Token name"
+        "Comprehension : Expr expr, SettaToken variable, Expr inSet, Expr condition",
+        "Cardinality   : SettaToken name"
     ));
 
     defineAst(outputDir, "Stmt", Arrays.asList(
         "Print : Expr expression",
-        "Let   : Token name, Expr value",
-        "Fun   : Token name, List<Token> params, Expr body"
+        "Let   : SettaToken name, Expr value",
+        "Fun   : SettaToken name, List<SettaToken> params, Expr body"
     ));
   }
 
