@@ -19,11 +19,11 @@ printStmt      → "print" expression ";" ;
 
 expression     → equality ;
 
-equality       → comparison ( "=" comparison )? ;
+equality       → comparison ( "=" comparison )* ;
 
-comparison     → subset ( ( "subseteq" ) subset )? ;
+comparison     → subset ( ( "subseteq" ) subset )* ;
 
-subset         → union ( "in" union )? ;
+subset         → union ( "in" union )* ;
 
 union          → intersection ( "union" intersection )* ;
 intersection   → difference ( "intersect" difference )* ;
