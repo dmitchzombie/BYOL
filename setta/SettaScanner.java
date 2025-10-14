@@ -68,6 +68,8 @@ class SettaScanner {
       case '{': addToken(LEFT_BRACE); break;
       case '}': addToken(RIGHT_BRACE); break;
       case ',': addToken(COMMA); break;
+      case '|': addToken(PIPE); break;
+      case '%': addToken(PERCENT); break;
       //case '.': addToken(DOT); break;
       case '-': addToken(MINUS); break;
       case '=': addToken(EQUAL); break;

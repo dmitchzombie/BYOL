@@ -1,6 +1,30 @@
-let A = {1, 2, 3};
-let B = {3, 4, 5};
+// Membership and subset tests
+let A = {1, 2, 3, 4};
+let B = {2, 3};
 
-def unionAll(X, Y) = X union Y;
+print 2 in A;              // true
+print B subset A;          // true
+print A equal B;           // false
 
-print unionAll(A, B);
+// Core set operations
+let C = {3, 4, 5};
+print A union C;           // {1, 2, 3, 4, 5}
+print A intersect C;       // {3, 4}
+print A - C;               // {1, 2}
+print |A|;                 // 4
+
+// Set builder notation
+let Squares = { x * x | x in A };
+let Evens   = { x | x in A , x % 2 = 0 };
+print Squares;             // {1, 4, 9, 16}
+print Evens;               // {2, 4}
+
+// Functions
+def squareSet(S) = { x * x | x in S };
+print squareSet({1, 2, 3}); // {1, 4, 9}
+
+// Nested and chained operations
+let D = {1, 2, 3};
+let E = {3, 4};
+print |(D union E)|;       // 4
+print (D intersect E) subset D; // true
