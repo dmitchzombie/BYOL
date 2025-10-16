@@ -16,7 +16,7 @@ public class Setta {
     runFile("setta/test1.setta");
     if (args.length > 1) {
       System.out.println("Usage: jlox [script]");
-      System.exit(64); 
+      System.exit(64);
     } else if (args.length == 1) {
       runFile(args[0]);
     } else {
@@ -30,42 +30,45 @@ public class Setta {
 
     System.out.println("File contents:\n" + source);
 
-    run(source); 
+    run(source);
 
-    if (hadError) System.exit(65);
+    if (hadError)
+      System.exit(65);
 
   }
 
-    private static void runPrompt() throws IOException {
+  private static void runPrompt() throws IOException {
     InputStreamReader input = new InputStreamReader(System.in);
     BufferedReader reader = new BufferedReader(input);
 
-    for (;;) { 
+    for (;;) {
       System.out.print("> ");
       String line = reader.readLine();
-      if (line == null) break;
+      if (line == null)
+        break;
       run(line);
 
-      hadError=false;
+      hadError = false;
     }
   }
 
-    private static void run(String source) {
+  private static void run(String source) {
     SettaScanner scanner = new SettaScanner(source);
     List<SettaToken> tokens = scanner.scanTokens();
 
-    /* 
-    // For now, just print the tokens.
-    for (SettaToken token : tokens) {
-      System.out.println(token);
-    }
-    */
+    /*
+     * // For now, just print the tokens.
+     * for (SettaToken token : tokens) {
+     * System.out.println(token);
+     * }
+     */
 
     // from book
     SettaParser parser = new SettaParser(tokens);
     List<Stmt> statements = parser.program();
 
-    if (hadError) return;
+    if (hadError)
+      return;
 
     System.out.println("Parsed AST");
     for (Stmt stmt : statements) {
@@ -73,16 +76,15 @@ public class Setta {
     }
   }
 
-   static void error(int line, String message) {
+  static void error(int line, String message) {
     report(line, "", message);
   }
 
   private static void report(int line, String where,
-                             String message) {
+      String message) {
     System.err.println(
         "[line " + line + "] Error" + where + ": " + message);
     hadError = true;
   }
 
-  
 }

@@ -5,7 +5,8 @@ import java.util.List;
 import static setta.SettaTokenType.*;
 
 public class SettaParser {
-  private static class ParseError extends RuntimeException {}
+  private static class ParseError extends RuntimeException {
+  }
 
   private final List<SettaToken> tokens;
   private int current = 0;
@@ -26,8 +27,10 @@ public class SettaParser {
   // declaration -> funDecl | letDecl | statement ;
   private Stmt declaration() {
     try {
-      if (match(DEF)) return funDecl();
-      if (match(LET)) return letDecl();
+      if (match(DEF))
+        return funDecl();
+      if (match(LET))
+        return letDecl();
       return statement();
     } catch (ParseError e) {
       synchronize();
@@ -63,7 +66,8 @@ public class SettaParser {
 
   // statement -> printStmt ;
   private Stmt statement() {
-    if (match(PRINT)) return printStmt();
+    if (match(PRINT))
+      return printStmt();
     throw error(peek(), "Expect statement 'print.'");
     // No other statement kinds implemented yet. Return null for now.
     // return null;
@@ -185,7 +189,8 @@ public class SettaParser {
     while (true) {
       if (match(LEFT_PAREN)) {
         expr = finishCall(expr);
-      } else break;
+      } else
+        break;
     }
     return expr;
   }
@@ -205,47 +210,16 @@ public class SettaParser {
     return new Expr.Call(callee, paren, arguments);
   }
 
-  /*
-  // parses either roster 
-  private Expr primary() {
-    if (match(NUMBER)) {
-      Object lit = previous().literal;
-      return new Expr.Literal(lit);
-    }
-    if (match(STRING)) {
-      Object lit = previous().literal;
-      return new Expr.Literal(lit);
-    }
-    if (match(TRUE)) return new Expr.Literal(true);
-    if (match(FALSE)) return new Expr.Literal(false);
-    if (match(IDENTIFIER)) return new Expr.Variable(previous());
-    if (match(LEFT_PAREN)) {
-      Expr expr = expression();
-      consume(RIGHT_PAREN, "Expect ')' after expression.");
-      return new Expr.Grouping(expr);
-    }
-    if (match(LEFT_BRACE)) {
-      // parse set literal: { expr, expr, ... }
-      List<Expr> elements = new ArrayList<>();
-      if (!check(RIGHT_BRACE)) {
-        do {
-          elements.add(expression());
-        } while (match(COMMA));
-      }
-      consume(RIGHT_BRACE, "Expect '}' after set literal.");
-      return new Expr.SetLiteral(elements);
-    }
-
-    throw error(peek(), "Expect expression.");
-  }
-  */
-
   // lots
   private Expr primary() {
-    if (match(NUMBER)) return new Expr.Literal(previous().literal);
-    if (match(STRING)) return new Expr.Literal(previous().literal);
-    if (match(TRUE)) return new Expr.Literal(true);
-    if (match(FALSE)) return new Expr.Literal(false);
+    if (match(NUMBER))
+      return new Expr.Literal(previous().literal);
+    if (match(STRING))
+      return new Expr.Literal(previous().literal);
+    if (match(TRUE))
+      return new Expr.Literal(true);
+    if (match(FALSE))
+      return new Expr.Literal(false);
 
     // "|" expression "|" -> cardinality
     if (match(PIPE)) {
@@ -254,7 +228,8 @@ public class SettaParser {
       return new Expr.Cardinality(expr);
     }
 
-    if (match(IDENTIFIER)) return new Expr.Variable(previous());
+    if (match(IDENTIFIER))
+      return new Expr.Variable(previous());
 
     if (match(LEFT_PAREN)) {
       Expr expr = expression();
@@ -262,59 +237,60 @@ public class SettaParser {
       return new Expr.Grouping(expr);
     }
 
-    if (match(LEFT_BRACE)) return setLiteralOrComprehension();
+    if (match(LEFT_BRACE))
+      return setLiteralOrComprehension();
 
     throw error(peek(), "Expect expression");
   }
 
   // helper for if an expression is roster or builder
-private Expr setLiteralOrComprehension() {
-  if (match(RIGHT_BRACE)) {
-    return new Expr.SetLiteral(new ArrayList<>()); // empty set {}
-  }
-
-  Expr first = expression();
-
-  // builder form: { expr | x in expr (, expr)? }
-  if (match(PIPE)) {
-    SettaToken variable = consume(IDENTIFIER, "Expect variable name after '|'.");
-    consume(IN, "Expect 'in' after variable name.");
-    Expr domain = expression();
-    Expr condition = null;
-    if (match(COMMA)) {
-      condition = expression();
+  private Expr setLiteralOrComprehension() {
+    if (match(RIGHT_BRACE)) {
+      return new Expr.SetLiteral(new ArrayList<>()); // empty set {}
     }
-    consume(RIGHT_BRACE, "Expect '}' after comprehension.");
-    return new Expr.Comprehension(first, variable, domain, condition);
+
+    Expr first = expression();
+
+    // builder form: { expr | x in expr (, expr)? }
+    if (match(PIPE)) {
+      SettaToken variable = consume(IDENTIFIER, "Expect variable name after '|'.");
+      consume(IN, "Expect 'in' after variable name.");
+      Expr domain = expression();
+      Expr condition = null;
+      if (match(COMMA)) {
+        condition = expression();
+      }
+      consume(RIGHT_BRACE, "Expect '}' after comprehension.");
+      return new Expr.Comprehension(first, variable, domain, condition);
+    }
+
+    // roster form: { e1, e2, ... }
+    List<Expr> elements = new ArrayList<>();
+    elements.add(first);
+    while (match(COMMA)) {
+      elements.add(expression());
+    }
+    consume(RIGHT_BRACE, "Expect '}' after set literal.");
+    return new Expr.SetLiteral(elements);
   }
 
-  // roster form: { e1, e2, ... }
-  List<Expr> elements = new ArrayList<>();
-  elements.add(first);
-  while (match(COMMA)) {
-    elements.add(expression());
-  }
-  consume(RIGHT_BRACE, "Expect '}' after set literal.");
-  return new Expr.SetLiteral(elements);
-}
-
-// from lox
-private void synchronize() {
-  advance();
-  while (!isAtEnd()) {
-    if (previous().type == SEMICOLON) return;
-    switch (peek().type) {
-      case DEF:
-      case LET:
-      case PRINT:
+  // from lox
+  private void synchronize() {
+    advance();
+    while (!isAtEnd()) {
+      if (previous().type == SEMICOLON)
         return;
+      switch (peek().type) {
+        case DEF:
+        case LET:
+        case PRINT:
+          return;
         default:
           break;
+      }
+      advance();
     }
-    advance();
   }
-}
-
 
   // ---------- Helper Methods ---------------------------
   private boolean match(SettaTokenType... types) {
@@ -328,12 +304,14 @@ private void synchronize() {
   }
 
   private boolean check(SettaTokenType type) {
-    if (isAtEnd()) return false;
+    if (isAtEnd())
+      return false;
     return peek().type == type;
   }
 
   private SettaToken advance() {
-    if (!isAtEnd()) current++;
+    if (!isAtEnd())
+      current++;
     return previous();
   }
 
@@ -350,7 +328,8 @@ private void synchronize() {
   }
 
   private SettaToken consume(SettaTokenType type, String message) {
-    if (check(type)) return advance();
+    if (check(type))
+      return advance();
     throw error(peek(), message);
   }
 
@@ -359,83 +338,4 @@ private void synchronize() {
     return new ParseError();
   }
 
-public static void main(String[] args) {
-    List<SettaToken> tokens = List.of(
-        // let A = {1, 2, 3, 4, 5};
-        new SettaToken(LET, "let", null, 1),
-        new SettaToken(IDENTIFIER, "A", null, 1),
-        new SettaToken(EQUAL, "=", null, 1),
-        new SettaToken(LEFT_BRACE, "{", null, 1),
-        new SettaToken(NUMBER, "1", 1.0, 1),
-        new SettaToken(COMMA, ",", null, 1),
-        new SettaToken(NUMBER, "2", 2.0, 1),
-        new SettaToken(COMMA, ",", null, 1),
-        new SettaToken(NUMBER, "3", 3.0, 1),
-        new SettaToken(COMMA, ",", null, 1),
-        new SettaToken(NUMBER, "4", 4.0, 1),
-        new SettaToken(COMMA, ",", null, 1),
-        new SettaToken(NUMBER, "5", 5.0, 1),
-        new SettaToken(RIGHT_BRACE, "}", null, 1),
-        new SettaToken(SEMICOLON, ";", null, 1),
-
-        // let Squares = { x * x | x in A };
-        new SettaToken(LET, "let", null, 2),
-        new SettaToken(IDENTIFIER, "Squares", null, 2),
-        new SettaToken(EQUAL, "=", null, 2),
-        new SettaToken(LEFT_BRACE, "{", null, 2),
-        new SettaToken(IDENTIFIER, "x", null, 2),
-        new SettaToken(STAR, "*", null, 2),
-        new SettaToken(IDENTIFIER, "x", null, 2),
-        new SettaToken(PIPE, "|", null, 2),
-        new SettaToken(IDENTIFIER, "x", null, 2),
-        new SettaToken(IN, "in", null, 2),
-        new SettaToken(IDENTIFIER, "A", null, 2),
-        new SettaToken(RIGHT_BRACE, "}", null, 2),
-        new SettaToken(SEMICOLON, ";", null, 2),
-
-        // let Evens = { x | x in A , x % 2 = 0 };
-        new SettaToken(LET, "let", null, 3),
-        new SettaToken(IDENTIFIER, "Evens", null, 3),
-        new SettaToken(EQUAL, "=", null, 3),
-        new SettaToken(LEFT_BRACE, "{", null, 3),
-        new SettaToken(IDENTIFIER, "x", null, 3),
-        new SettaToken(PIPE, "|", null, 3),
-        new SettaToken(IDENTIFIER, "x", null, 3),
-        new SettaToken(IN, "in", null, 3),
-        new SettaToken(IDENTIFIER, "A", null, 3),
-        new SettaToken(COMMA, ",", null, 3),
-        new SettaToken(IDENTIFIER, "x", null, 3),
-        new SettaToken(PERCENT, "%", null, 3),
-        new SettaToken(NUMBER, "2", 2.0, 3),
-        new SettaToken(EQUAL, "=", null, 3),
-        new SettaToken(NUMBER, "0", 0.0, 3),
-        new SettaToken(RIGHT_BRACE, "}", null, 3),
-        new SettaToken(SEMICOLON, ";", null, 3),
-
-        // print Squares;
-        new SettaToken(PRINT, "print", null, 4),
-        new SettaToken(IDENTIFIER, "Squares", null, 4),
-        new SettaToken(SEMICOLON, ";", null, 4),
-
-        // print Evens;
-        new SettaToken(PRINT, "print", null, 5),
-        new SettaToken(IDENTIFIER, "Evens", null, 5),
-        new SettaToken(SEMICOLON, ";", null, 5),
-
-        new SettaToken(EOF, "", null, 6)
-    );
-
-    SettaParser parser = new SettaParser(tokens);
-    List<Stmt> stmts = parser.program();
-
-    for (Stmt stmt : stmts) {
-        System.out.println(stmt);
-    }
 }
-
-}
-
-
-
-
-
