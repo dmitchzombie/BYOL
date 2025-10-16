@@ -3,7 +3,7 @@ public enum SettaTokenType {
     //single character tokens
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE,
     RIGHT_BRACE, COMMA, PIPE, MINUS, PLUS,
-    SLASH, STAR , PERCENT , SEMICOLON , EQUAL ,
+    SLASH, STAR , PERCENT , SEMICOLON , EQUAL , BANG,
 
     //multi-character operators
    SUBSETEQ , IN , UNION, INTERSECT,

@@ -21,7 +21,8 @@ public class GenerateAST {
         "Grouping      : Expr expression",
         "SetLiteral    : List<Expr> elements",
         "Comprehension : Expr expr, SettaToken variable, Expr inSet, Expr condition",
-        "Cardinality   : SettaToken name"
+        "Cardinality   : Expr expression",
+        "Call          : Expr callee, SettaToken paren, List<Expr> arguments"
     ));
 
     defineAst(outputDir, "Stmt", Arrays.asList(
@@ -96,6 +97,25 @@ public class GenerateAST {
     for (String field : fields) {
       writer.println("    final " + field + ";");
     }
+   // writer.println("  }");
+
+      // toString from book for parser testing
+
+    writer.println();
+    writer.println("    @Override");
+    writer.println("    public String toString() {");
+    writer.print("      return \"" + className + "(\"");
+    for (int i = 0; i < fields.length; i++) {
+      String name = fields[i].split(" ")[1];
+      writer.print(" + " + name);
+      if (i < fields.length - 1) writer.print(" + \", \"");
+    }
+    writer.println(" + \")\";");
+    writer.println("    }");
+
     writer.println("  }");
+
+    
   }
+
 }

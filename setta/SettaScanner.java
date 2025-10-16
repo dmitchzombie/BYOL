@@ -63,6 +63,7 @@ class SettaScanner {
       case '\n':
         line++;
         break;
+      case '!': addToken(BANG); break;
       case '(': addToken(LEFT_PAREN); break;
       case ')': addToken(RIGHT_PAREN); break;
       case '{': addToken(LEFT_BRACE); break;

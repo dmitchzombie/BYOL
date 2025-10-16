@@ -19,6 +19,11 @@ abstract class Stmt {
     }
 
     final Expr expression;
+
+    @Override
+    public String toString() {
+      return "Print(" + expression + ")";
+    }
   }
   static class Let extends Stmt {
     Let(SettaToken name, Expr value) {
@@ -33,6 +38,11 @@ abstract class Stmt {
 
     final SettaToken name;
     final Expr value;
+
+    @Override
+    public String toString() {
+      return "Let(" + name + ", " + value + ")";
+    }
   }
   static class Fun extends Stmt {
     Fun(SettaToken name, List<SettaToken> params, Expr body) {
@@ -49,6 +59,11 @@ abstract class Stmt {
     final SettaToken name;
     final List<SettaToken> params;
     final Expr body;
+
+    @Override
+    public String toString() {
+      return "Fun(" + name + ", " + params + ", " + body + ")";
+    }
   }
 
   abstract <R> R accept(Visitor<R> visitor);

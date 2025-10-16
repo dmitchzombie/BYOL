@@ -12,6 +12,7 @@ abstract class Expr {
     R visitSetLiteralExpr(SetLiteral expr);
     R visitComprehensionExpr(Comprehension expr);
     R visitCardinalityExpr(Cardinality expr);
+    R visitCallExpr(Call expr);
   }
   static class Binary extends Expr {
     Binary(Expr left, SettaToken operator, Expr right) {
@@ -28,6 +29,11 @@ abstract class Expr {
     final Expr left;
     final SettaToken operator;
     final Expr right;
+
+    @Override
+    public String toString() {
+      return "Binary(" + left + ", " + operator + ", " + right + ")";
+    }
   }
   static class Unary extends Expr {
     Unary(SettaToken operator, Expr right) {
@@ -42,6 +48,11 @@ abstract class Expr {
 
     final SettaToken operator;
     final Expr right;
+
+    @Override
+    public String toString() {
+      return "Unary(" + operator + ", " + right + ")";
+    }
   }
   static class Literal extends Expr {
     Literal(Object value) {
@@ -54,6 +65,11 @@ abstract class Expr {
     }
 
     final Object value;
+
+    @Override
+    public String toString() {
+      return "Literal(" + value + ")";
+    }
   }
   static class Variable extends Expr {
     Variable(SettaToken name) {
@@ -66,6 +82,11 @@ abstract class Expr {
     }
 
     final SettaToken name;
+
+    @Override
+    public String toString() {
+      return "Variable(" + name + ")";
+    }
   }
   static class Grouping extends Expr {
     Grouping(Expr expression) {
@@ -78,6 +99,11 @@ abstract class Expr {
     }
 
     final Expr expression;
+
+    @Override
+    public String toString() {
+      return "Grouping(" + expression + ")";
+    }
   }
   static class SetLiteral extends Expr {
     SetLiteral(List<Expr> elements) {
@@ -90,6 +116,11 @@ abstract class Expr {
     }
 
     final List<Expr> elements;
+
+    @Override
+    public String toString() {
+      return "SetLiteral(" + elements + ")";
+    }
   }
   static class Comprehension extends Expr {
     Comprehension(Expr expr, SettaToken variable, Expr inSet, Expr condition) {
@@ -108,10 +139,15 @@ abstract class Expr {
     final SettaToken variable;
     final Expr inSet;
     final Expr condition;
+
+    @Override
+    public String toString() {
+      return "Comprehension(" + expr + ", " + variable + ", " + inSet + ", " + condition + ")";
+    }
   }
   static class Cardinality extends Expr {
-    Cardinality(SettaToken name) {
-      this.name = name;
+    Cardinality(Expr expression) {
+      this.expression = expression;
     }
 
     @Override
@@ -119,7 +155,33 @@ abstract class Expr {
       return visitor.visitCardinalityExpr(this);
     }
 
-    final SettaToken name;
+    final Expr expression;
+
+    @Override
+    public String toString() {
+      return "Cardinality(" + expression + ")";
+    }
+  }
+  static class Call extends Expr {
+    Call(Expr callee, SettaToken paren, List<Expr> arguments) {
+      this.callee = callee;
+      this.paren = paren;
+      this.arguments = arguments;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitCallExpr(this);
+    }
+
+    final Expr callee;
+    final SettaToken paren;
+    final List<Expr> arguments;
+
+    @Override
+    public String toString() {
+      return "Call(" + callee + ", " + paren + ", " + arguments + ")";
+    }
   }
 
   abstract <R> R accept(Visitor<R> visitor);
