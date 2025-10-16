@@ -81,7 +81,7 @@ public class SettaParser {
     return equality();
   }
 
-  // equality -> comparison ( "=" comparison )? ;
+  // equality -> comparison ( "=" comparison )* ;
   private Expr equality() {
     Expr expr = comparison();
     while (match(EQUAL)) {
