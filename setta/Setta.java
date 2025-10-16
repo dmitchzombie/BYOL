@@ -13,6 +13,7 @@ public class Setta {
   static boolean hadError = false;
 
   public static void main(String[] args) throws IOException {
+    runFile("setta/test1.setta");
     if (args.length > 1) {
       System.out.println("Usage: jlox [script]");
       System.exit(64); 
@@ -53,9 +54,22 @@ public class Setta {
     SettaScanner scanner = new SettaScanner(source);
     List<SettaToken> tokens = scanner.scanTokens();
 
+    /* 
     // For now, just print the tokens.
     for (SettaToken token : tokens) {
       System.out.println(token);
+    }
+    */
+
+    // from book
+    SettaParser parser = new SettaParser(tokens);
+    List<Stmt> statements = parser.program();
+
+    if (hadError) return;
+
+    System.out.println("Parsed AST");
+    for (Stmt stmt : statements) {
+      System.out.println(stmt);
     }
   }
 

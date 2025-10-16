@@ -3,8 +3,8 @@ let A = {1, 2, 3, 4};
 let B = {2, 3};
 
 print 2 in A;              // true
-print B subset A;          // true
-print A equal B;           // false
+print B subseteq A;          // true
+print A = B;           // false
 
 // Core set operations
 let C = {3, 4, 5};
@@ -27,4 +27,4 @@ print squareSet({1, 2, 3}); // {1, 4, 9}
 let D = {1, 2, 3};
 let E = {3, 4};
 print |(D union E)|;       // 4
-print (D intersect E) subset D; // true
+print (D intersect E) subseteq D; // true

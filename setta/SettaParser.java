@@ -92,7 +92,7 @@ public class SettaParser {
     return expr;
   }
 
-  // comparison -> subset ( "subseteq" subset)? ;
+  // comparison -> subset ( "subseteq" subset)* ;
   private Expr comparison() {
     Expr expr = subset();
     while (match(SUBSETEQ)) {
@@ -103,7 +103,7 @@ public class SettaParser {
     return expr;
   }
 
-  // subset -> union ( "in" union )? ;
+  // subset -> union ( "in" union )* ;
   private Expr subset() {
     Expr expr = union();
     while (match(IN)) {
@@ -240,6 +240,7 @@ public class SettaParser {
   }
   */
 
+  // lots
   private Expr primary() {
     if (match(NUMBER)) return new Expr.Literal(previous().literal);
     if (match(STRING)) return new Expr.Literal(previous().literal);
