@@ -9,8 +9,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Setta {
-
+  private static final Interpreter interpreter = new Interpreter();
   static boolean hadError = false;
+  static boolean hadRuntimeError = false;
+
 
   public static void main(String[] args) throws IOException {
     runFile("setta/test1.setta");
@@ -32,8 +34,9 @@ public class Setta {
 
     run(source);
 
-    if (hadError)
-      System.exit(65);
+    if (hadError) System.exit(65);
+    if (hadRuntimeError) System.exit(70);
+
 
   }
 
@@ -70,6 +73,8 @@ public class Setta {
     if (hadError)
       return;
 
+    interpreter.interpret(statements);
+
     System.out.println("Parsed AST");
     for (Stmt stmt : statements) {
       System.out.println(stmt);
@@ -78,6 +83,12 @@ public class Setta {
 
   static void error(int line, String message) {
     report(line, "", message);
+  }
+
+  static void runtimeError(RuntimeError error) {
+    System.err.println(error.getMessage() +
+        "\n[line " + error.token.line + "]");
+    hadRuntimeError = true;
   }
 
   private static void report(int line, String where,
