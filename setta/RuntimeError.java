@@ -7,4 +7,10 @@ public class RuntimeError extends RuntimeException {
     super(message);
     this.token = token;
   }
+
+  @Override
+  public String getMessage() {
+    return "Runtime error at " + token + ": " + super.getMessage();
+  }
+
 }

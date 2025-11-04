@@ -44,23 +44,32 @@ private String stringify(Object object) {
 
         switch (expr.operator.type) {
             case MINUS:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left - (double)right;
             case SLASH:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left / (double)right;
             case STAR:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left * (double)right;
             case PLUS:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left + (double)right; //we don't have to worry about concatenating strings for our language
             case PERCENT: //for determining even / odd 
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left % (double)right;
                 //instead of saying "...| x is even" we say "...| x % 2 == 0"
             case GREATER:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left > (double)right;
             case GREATER_EQUAL:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left >= (double)right;
             case LESS:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left < (double)right;
             case LESS_EQUAL:
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left <= (double)right;
 
             case BANG_EQUAL: 
@@ -77,6 +86,8 @@ private String stringify(Object object) {
                 return subseteqValues(left, right);
             case IN:
                 return inValues(left, right);
+            default:
+                break;
 
     }
         return null;
@@ -89,11 +100,13 @@ private String stringify(Object object) {
 
        switch (expr.operator.type) {
         case MINUS:
+            checkNumberOperand(expr.operator, right);
             return -(double)right;
         case BANG:
             return !isTrue(right);
+        default:
+            return null;
        }
-        return null;
     }
     
     
@@ -191,13 +204,27 @@ private void checkSetOperands(Object left, Object right) {
     }
 }
 
+    // from book
+    private void checkNumberOperand(SettaToken operator, Object operand) {
+        if (operand instanceof Double) return;
+        throw new RuntimeError(operator, "Operand must be a number.");
+    }
+
+    private void checkNumberOperands(SettaToken operator, Object left, Object right) {
+        if (left instanceof Double && right instanceof Double) return;
+        throw new RuntimeError(operator, "Operands must be numbers.");
+    }
+
 //#endregion
 
 
 //#region VISITOR METHODS FOR STMT 
+    // from book
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
     }
 
     @Override

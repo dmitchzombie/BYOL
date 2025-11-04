@@ -13,11 +13,10 @@ public class Setta {
   static boolean hadError = false;
   static boolean hadRuntimeError = false;
 
-
   public static void main(String[] args) throws IOException {
-    runFile("setta/test1.setta");
+    // runFile("setta/test2.setta");
     if (args.length > 1) {
-      System.out.println("Usage: jlox [script]");
+      System.out.println("Usage: setta [script]");
       System.exit(64);
     } else if (args.length == 1) {
       runFile(args[0]);
@@ -34,15 +33,17 @@ public class Setta {
 
     run(source);
 
-    if (hadError) System.exit(65);
-    if (hadRuntimeError) System.exit(70);
-
+    if (hadError)
+      System.exit(65);
+    if (hadRuntimeError)
+      System.exit(70);
 
   }
 
   private static void runPrompt() throws IOException {
     InputStreamReader input = new InputStreamReader(System.in);
     BufferedReader reader = new BufferedReader(input);
+    System.out.println("Welcome to Setta!");
 
     for (;;) {
       System.out.print("> ");
@@ -75,10 +76,13 @@ public class Setta {
 
     interpreter.interpret(statements);
 
-    System.out.println("Parsed AST");
-    for (Stmt stmt : statements) {
-      System.out.println(stmt);
-    }
+    /*
+     * uncomment to see AST
+     * System.out.println("Parsed AST");
+     * for (Stmt stmt : statements) {
+     * System.out.println(stmt);
+     * }
+     */
   }
 
   static void error(int line, String message) {
@@ -97,5 +101,14 @@ public class Setta {
         "[line " + line + "] Error" + where + ": " + message);
     hadError = true;
   }
+
+  // for scanning
+  // static void error(SettaToken token, String message) {
+  //   if (token.type == SettaTokenType.EOF) {
+  //     report(token.line, " at end", message);
+  //   } else {
+  //     report(token.line, " at '" + token.lexeme + "'", message);
+  //   }
+  // }
 
 }
