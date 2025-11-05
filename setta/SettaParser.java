@@ -82,7 +82,24 @@ public class SettaParser {
 
   // expression -> equality
   private Expr expression() {
-    return equality();
+    return assignment(); //equality();
+  }
+
+  // assignment -> IDENTIFIER "=" assignment | equality ;
+  private Expr assignment() {
+    Expr expr = equality();
+
+    if (match(EQUAL)) {
+      SettaToken equals = previous();
+      Expr value = assignment();
+
+      if (expr instanceof Expr.Variable) {
+        SettaToken name = ((Expr.Variable) expr).name;
+        return new Expr.Assign(name, value);
+      }
+      error(equals, "Invalid assignment target.");
+    }
+    return expr;
   }
 
   // equality -> comparison ( "=" comparison )* ;

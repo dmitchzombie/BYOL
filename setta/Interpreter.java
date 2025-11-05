@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Interpreter implements Expr.Visitor<Object> , Stmt.Visitor<Void> {
+    private Environment environment = new Environment();
 
 void interpret(List<Stmt> statements) {
         try {
@@ -118,8 +119,7 @@ private String stringify(Object object) {
 
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitVariableExpr'");
+        return environment.get(expr.name);
     }
 
     @Override
@@ -129,8 +129,13 @@ private String stringify(Object object) {
 
     @Override
     public Object visitSetLiteralExpr(Expr.SetLiteral expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitSetLiteralExpr'");
+        Set<Object> result = new HashSet<>();
+
+        for (Expr elementExpr : expr.elements) {
+            Object value = evaluate(elementExpr);
+            result.add(value);
+        }
+        return result;
     }
 
     @Override
@@ -149,6 +154,13 @@ private String stringify(Object object) {
     public Object visitCallExpr(Expr.Call expr) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visitCallExpr'");
+    }
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
     }
 //#endregion 
 
@@ -229,7 +241,9 @@ private void checkSetOperands(Object left, Object right) {
 
     @Override
     public Void visitLetStmt(Stmt.Let stmt) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Object value = evaluate(stmt.value);
+        environment.define(stmt.name.lexeme, value);
+        return null;
     }
 
     @Override

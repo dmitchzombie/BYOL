@@ -14,6 +14,7 @@ public class GenerateAST {
     String outputDir = args[0];
 
     defineAst(outputDir, "Expr", Arrays.asList(
+        "Assign        : SettaToken name, Expr value",
         "Binary        : Expr left, SettaToken operator, Expr right",
         "Unary         : SettaToken operator, Expr right",
         "Literal       : Object value",
