@@ -15,11 +15,18 @@ parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
 letDecl        → "let" IDENTIFIER "=" expression ";" ;
 
 statement      → printStmt ;
+               | exprStmt
+
+exprStmt       → expression ";" ;
+
 printStmt      → "print" expression ";" ;
 
 expression     → equality ;
 
-equality       → comparison ( "=" comparison )* ;
+assignment     → IDENTIFIER "=" assignment
+               | equality ;
+
+equality       → comparison ( "==" comparison )* ;
 
 comparison     → subset ( "subseteq" subset )* ;
 
