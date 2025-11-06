@@ -7,6 +7,7 @@ abstract class Stmt {
     R visitPrintStmt(Print stmt);
     R visitLetStmt(Let stmt);
     R visitFunStmt(Fun stmt);
+    R visitExpressionStmt(Expression stmt);
   }
   static class Print extends Stmt {
     Print(Expr expression) {
@@ -63,6 +64,23 @@ abstract class Stmt {
     @Override
     public String toString() {
       return "Fun(" + name + ", " + params + ", " + body + ")";
+    }
+  }
+  static class Expression extends Stmt {
+    Expression(Expr expression) {
+      this.expression = expression;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitExpressionStmt(this);
+    }
+
+    final Expr expression;
+
+    @Override
+    public String toString() {
+      return "Expression(" + expression + ")";
     }
   }
 

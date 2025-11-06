@@ -29,7 +29,8 @@ public class GenerateAST {
     defineAst(outputDir, "Stmt", Arrays.asList(
         "Print : Expr expression",
         "Let   : SettaToken name, Expr value",
-        "Fun   : SettaToken name, List<SettaToken> params, Expr body"
+        "Fun   : SettaToken name, List<SettaToken> params, Expr body",
+        "Expression : Expr expression"
     ));
   }
 

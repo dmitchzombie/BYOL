@@ -73,7 +73,10 @@ class SettaScanner {
       case '%': addToken(PERCENT); break;
       //case '.': addToken(DOT); break;
       case '-': addToken(MINUS); break;
-      case '=': addToken(EQUAL); break;
+      case '=': 
+        addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+        break; 
+      //addToken(EQUAL); break;
       case '+': addToken(PLUS); break;
       case ';': addToken(SEMICOLON); break;
       case '*': addToken(STAR); break; 

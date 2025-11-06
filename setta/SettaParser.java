@@ -68,7 +68,8 @@ public class SettaParser {
   private Stmt statement() {
     if (match(PRINT))
       return printStmt();
-    throw error(peek(), "Expect statement 'print.'");
+      return exprStmt();
+    //throw error(peek(), "Expect statement 'print.'");
     // No other statement kinds implemented yet. Return null for now.
     // return null;
   }
@@ -78,6 +79,13 @@ public class SettaParser {
     Expr value = expression();
     consume(SEMICOLON, "Expect ';' after value.");
     return new Stmt.Print(value);
+  }
+
+  // exprStmt -> expression ;
+  private Stmt exprStmt() {
+    Expr expr = expression();
+    consume(SEMICOLON, "Expect ';' after expression.");
+    return new Stmt.Expression(expr);
   }
 
   // expression -> equality
@@ -102,10 +110,10 @@ public class SettaParser {
     return expr;
   }
 
-  // equality -> comparison ( "=" comparison )* ;
+  // equality -> comparison ( "==" comparison )* ;
   private Expr equality() {
     Expr expr = comparison();
-    while (match(EQUAL)) {
+    while (match(EQUAL_EQUAL)) {
       SettaToken operator = previous();
       Expr right = comparison();
       expr = new Expr.Binary(expr, operator, right);

@@ -9,12 +9,12 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Setta {
-  private static final Interpreter interpreter = new Interpreter();
+  private static Interpreter interpreter = new Interpreter();
   static boolean hadError = false;
   static boolean hadRuntimeError = false;
 
   public static void main(String[] args) throws IOException {
-    // runFile("setta/test2.setta");
+     runFile("setta/test2.setta");
     if (args.length > 1) {
       System.out.println("Usage: setta [script]");
       System.exit(64);
@@ -26,6 +26,7 @@ public class Setta {
   }
 
   private static void runFile(String path) throws IOException {
+    interpreter = new Interpreter();
     byte[] bytes = Files.readAllBytes(Paths.get(path));
     String source = new String(bytes, Charset.defaultCharset());
 
@@ -41,6 +42,7 @@ public class Setta {
   }
 
   private static void runPrompt() throws IOException {
+    interpreter = new Interpreter();
     InputStreamReader input = new InputStreamReader(System.in);
     BufferedReader reader = new BufferedReader(input);
     System.out.println("Welcome to Setta!");

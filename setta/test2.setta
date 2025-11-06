@@ -1,1 +1,11 @@
-print 1 + 2;
+print "";
+
+let A = {1, 2, 3, 4};
+let B = {2, 3};
+
+print 2 in A;              // true
+print B subseteq A;          // true
+print A == B;           // false
+A=B;
+print A;
+print A==B;             // true

@@ -128,6 +128,12 @@ private String stringify(Object object) {
     }
 
     @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
     public Object visitSetLiteralExpr(Expr.SetLiteral expr) {
         Set<Object> result = new HashSet<>();
 
