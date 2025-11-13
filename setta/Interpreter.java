@@ -1,6 +1,6 @@
 package setta;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -135,7 +135,7 @@ private String stringify(Object object) {
 
     @Override
     public Object visitSetLiteralExpr(Expr.SetLiteral expr) {
-        Set<Object> result = new HashSet<>();
+        Set<Object> result = new LinkedHashSet<>();
 
         for (Expr elementExpr : expr.elements) {
             Object value = evaluate(elementExpr);
@@ -193,14 +193,14 @@ private boolean isEqual(Object a, Object b) {
     
 private Object unionValues(Object left, Object right) {
     checkSetOperands(left, right);
-    Set<Object> result = new HashSet<>((Set<?>) left);
+    Set<Object> result = new LinkedHashSet<>((Set<?>) left);
     result.addAll((Set<?>) right);
     return result;
 }
 
 private Object intersectValues(Object left, Object right) {
     checkSetOperands(left, right);
-    Set<Object> result = new HashSet<>((Set<?>) left);
+    Set<Object> result = new LinkedHashSet<>((Set<?>) left);
     result.retainAll((Set<?>) right);
     return result;
 }
