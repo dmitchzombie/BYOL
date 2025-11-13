@@ -5,6 +5,10 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
+//  javac tool/GenerateAST     
+// java tool.GenerateAST setta       
+
+
 public class GenerateAST {
   public static void main(String[] args) throws IOException {
     if (args.length != 1) {

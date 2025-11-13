@@ -152,8 +152,10 @@ private String stringify(Object object) {
 
     @Override
     public Object visitCardinalityExpr(Expr.Cardinality expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitCardinalityExpr'");
+        Object value = evaluate(expr.expression);
+        if (!(value instanceof Set<?>))
+            throw new RuntimeError(null, "Operand must be a set for cardinality.");
+        return (double) ((Set<?>) value).size();
     }
 
     @Override
@@ -241,6 +243,7 @@ private void checkSetOperands(Object left, Object right) {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
+      //  System.out.println(value);
         System.out.println(stringify(value));
         return null;
     }
