@@ -29,9 +29,6 @@ public class Setta {
     interpreter = new Interpreter();
     byte[] bytes = Files.readAllBytes(Paths.get(path));
     String source = new String(bytes, Charset.defaultCharset());
-
-    System.out.println("File contents:\n" + source);
-
     run(source);
 
     if (hadError)

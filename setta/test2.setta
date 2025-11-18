@@ -1,11 +1,80 @@
-print "";
+// Test suite for Setta language features
 
+// 1) Basic literals and printing
+print "";                     // empty string
+print 123;                      // number
+print "hello";                // string
+print true;                     // boolean
+print false;
+
+// 2) Arithmetic and precedence
+let x = 10;
+let y = 3;
+print x + y;                    // 13
+print x - y;                    // 7
+print x * y;                    // 30
+print x / y;                    // 3.333...
+print x % y;                    // 1
+print -x;                       // -10
+print 1 + 2 * 3;                // 7 (precedence)
+
+// 3) Comparisons
+
+//it seems we can't handle some comparisons for some reason?
+
+//print x > y;                    // true
+//print x >= 10;                  // true
+//print x < y;                    // false
+//print x <= y;                   // false
+
+print x == 10;                  // true
+
+
+//print x != y;                   // true
+
+// 4) Variable assignment and reassignment
+let foo = 5;
+print foo;                      // 5
+foo = 20;
+print foo;                      // 20
+
+// 5) Set literals, membership, subset, equality, union, intersection
 let A = {1, 2, 3, 4};
 let B = {2, 3};
+print 5 in A;                   // false
+print 2 in A;                   //true
+print A subseteq B;             // false
+print B subseteq A;             //true
+print A == B;                   // false
 
-print 2 in A;              // true
-print B subseteq A;          // true
-print A == B;           // false
-A=B;
-print A;
-print A==B;             // true
+// union and intersect
+let A1 = {1, 2, 3};
+let B1 = {3, 4};
+print A1 union B1;              // {1,2,3,4}
+print A1 intersect B1;          // {3}
+
+// equality after assignment
+A1 = B1;                        // assign A1 = {3,4}
+print A1;                       // {3,4}
+print A1 == B1;                 // true
+
+// 6) Cardinality
+let C = {1,2,3};
+print |C|;                       // 3
+
+// 7) Set comprehensions (builders)
+let D = { n * 2 | n in {1,2,3} };
+print D;                        // {2,4,6}
+
+let E = { n | n in {1,2,3,4,5,6,7,8} , n % 2 == 0 };
+print E;                        // {2,4,6,8}
+
+// 8) Nested/composed expressions
+let S = {1,2};
+S = S union {3};
+print S;                        // {1,2,3}
+
+// 9) Grouping and complex expression
+print (1 + 2) * (3 + 4);        // 21
+
+// End of tests

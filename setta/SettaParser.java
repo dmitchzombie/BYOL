@@ -317,7 +317,7 @@ public class SettaParser {
     }
   }
 
-  // ---------- Helper Methods ---------------------------
+  //#region Helper Methods
   private boolean match(SettaTokenType... types) {
     for (SettaTokenType type : types) {
       if (check(type)) {
@@ -362,5 +362,5 @@ public class SettaParser {
     Setta.error(token.line, message);
     return new ParseError();
   }
-
+//#endregion
 }

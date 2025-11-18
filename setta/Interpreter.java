@@ -1,5 +1,6 @@
 package setta;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -146,8 +147,26 @@ private String stringify(Object object) {
 
     @Override
     public Object visitComprehensionExpr(Expr.Comprehension expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitComprehensionExpr'");
+        Object inSetValue = evaluate(expr.inSet);
+        if (!(inSetValue instanceof Set<?>)) {
+            throw new RuntimeError(expr.variable, "Right operand of 'in' must be a set.");
+        }
+
+        Set<Object> result = new LinkedHashSet<>();
+        for (Object item : (Set<?>) inSetValue) {
+            environment.define(expr.variable.lexeme, item);
+
+            if (expr.condition != null) {
+                Object conditionValue = evaluate(expr.condition);
+                if (!isTrue(conditionValue)) {
+                    continue;
+                }
+            }
+
+            Object exprValue = evaluate(expr.expr);
+            result.add(exprValue);
+        }
+        return result;
     }
 
     @Override
@@ -160,8 +179,19 @@ private String stringify(Object object) {
 
     @Override
     public Object visitCallExpr(Expr.Call expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitCallExpr'");
+        Object callee = evaluate(expr.callee);
+        
+        List<Object> arguments = new ArrayList<>();
+        for (Expr argument : expr.arguments) {
+            arguments.add(evaluate(argument));
+        }
+
+        if(!(callee instanceof SettaCallable)){
+            throw new RuntimeError (expr.paren, "Can only call functions and classes.");
+        }
+
+        SettaCallable function = (SettaCallable)callee;
+        return function.call(this, arguments);
     }
 
     @Override
