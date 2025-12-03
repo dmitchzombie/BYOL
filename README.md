@@ -5,12 +5,8 @@
 ```nginx
 program        → declaration* EOF ;
 
-declaration    → funDecl
-               | letDecl
+declaration    → letDecl
                | statement ;
-
-funDecl        → "def" IDENTIFIER "(" parameters? ")" "=" expression ";" ;
-parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
 
 letDecl        → "let" IDENTIFIER "=" expression ";" ;
 
@@ -21,28 +17,27 @@ exprStmt       → expression ";" ;
 
 printStmt      → "print" expression ";" ;
 
-expression     → equality ;
+expression     → assignment ;
 
 assignment     → IDENTIFIER "=" assignment
                | equality ;
 
-equality       → comparison ( "==" comparison )* ;
+equality       → comparison ( ( "==" | "!=" ) comparison )* ;
 
-comparison     → subset ( "subseteq" subset )* ;
+comparison     → subset ( ( "subseteq" | ">" | "<" | ">=" | "<=" ) subset )* ;
 
 subset         → union ( "in" union )* ;
 
 union          → intersection ( "union" intersection )* ;
-intersection   → difference ( "intersect" difference )* ;
+intersection   → product ( "intersect" product )* ;
+
+product        → difference ( "X" difference )* ;
 
 difference     → term ( "-" term )* ;
 
 term           → factor ( ( "+" | "-" ) factor )* ;
 factor         → unary ( ( "*" | "/" | "%" ) unary )* ;
-unary          → ( "-" | "!" ) unary | call ;
-
-call           → primary ( "(" arguments? ")" )* ;
-arguments      → expression ( "," expression )* ;
+unary          → ( "-" | "!" ) unary | primary ;
 
 primary        → NUMBER
                | STRING
@@ -50,12 +45,12 @@ primary        → NUMBER
                | "false"
                | "|" expression "|"         // cardinality
                | IDENTIFIER
-               | "{" elements? "}"
-               | "(" expression ")" ;
+               | "(" expression ")"
+               | setLiteralOrComprehension ;
 
-elements       → expression ( "," expression )*
-               | comprehension ;
-
-comprehension  → expression "|" IDENTIFIER "in" expression ( "," expression )? ;
+setLiteralOrComprehension
+               →  "{" "}"
+               |  "{" expression ( "," expression )* "}"
+               |  "{" expression "|" IDENTIFIER "in" expression ( "," expression )? "}" ;
 
 ```
