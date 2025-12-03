@@ -35,6 +35,19 @@ private String stringify(Object object) {
       return text;
     }
 
+    if (object instanceof Set<?>) {
+      Set<?> set = (Set<?>) object;
+      StringBuilder sb = new StringBuilder("{");
+      boolean first = true;
+      for (Object element : set) {
+        if (!first) sb.append(", ");
+        sb.append(stringify(element));
+        first = false;
+      }
+      sb.append("}");
+      return sb.toString();
+    }
+
     return object.toString();
   }
 
@@ -88,6 +101,8 @@ private String stringify(Object object) {
                 return subseteqValues(left, right);
             case IN:
                 return inValues(left, right);
+            case TIMES: 
+                return cartesian(left, right);
             default:
                 break;
 
@@ -252,6 +267,21 @@ private void checkSetOperands(Object left, Object right) {
     if (!(left instanceof Set<?>) || !(right instanceof Set<?>)) {
         throw new RuntimeError(null, "Operands must be sets.");
     }
+}
+
+private Object cartesian(Object left, Object right) {
+    checkSetOperands(left, right);
+    Set<Object> result = new LinkedHashSet<>();
+
+    for (Object a : (Set<?>) left) {
+        for (Object b : (Set<?>) right) {
+            List<Object> pair = new ArrayList<>();
+            pair.add(a);
+            pair.add(b);
+            result.add(pair);
+        }
+    }
+    return result;
 }
 
     // from book

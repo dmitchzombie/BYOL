@@ -88,7 +88,7 @@ public class SettaParser {
     return new Stmt.Expression(expr);
   }
 
-  // expression -> equality
+  // expression -> assignment
   private Expr expression() {
     return assignment(); //equality();
   }
@@ -110,10 +110,10 @@ public class SettaParser {
     return expr;
   }
 
-  // equality -> comparison ( "==" comparison )* ;
+  // equality -> comparison ( ("==" | "!=") comparison )* ;
   private Expr equality() {
     Expr expr = comparison();
-    while (match(EQUAL_EQUAL)) {
+    while (match(EQUAL_EQUAL, BANG_EQUAL)) {
       SettaToken operator = previous();
       Expr right = comparison();
       expr = new Expr.Binary(expr, operator, right);
@@ -121,10 +121,10 @@ public class SettaParser {
     return expr;
   }
 
-  // comparison -> subset ( "subseteq" subset)* ;
+  // comparison -> subset ( ( "subseteq" | ">" | ">=" | "<" | "<=" ) subset)* ;
   private Expr comparison() {
     Expr expr = subset();
-    while (match(SUBSETEQ)) {
+    while (match(SUBSETEQ, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
       SettaToken operator = previous();
       Expr right = subset();
       expr = new Expr.Binary(expr, operator, right);
@@ -156,8 +156,19 @@ public class SettaParser {
 
   // difference ( "intersect" difference )* ;
   private Expr intersection() {
-    Expr expr = difference();
+    Expr expr = product();
     while (match(INTERSECT)) {
+      SettaToken operator = previous();
+      Expr right = product();
+      expr = new Expr.Binary(expr, operator, right);
+    }
+    return expr;
+  }
+
+  // product -> intersection ( "X" intersection )*
+  private Expr product() {
+    Expr expr = difference();
+    while (match(TIMES)) {
       SettaToken operator = previous();
       Expr right = difference();
       expr = new Expr.Binary(expr, operator, right);

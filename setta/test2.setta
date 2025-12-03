@@ -22,15 +22,19 @@ print 1 + 2 * 3;                // 7 (precedence)
 
 //it seems we can't handle some comparisons for some reason?
 
-//print x > y;                    // true
-//print x >= 10;                  // true
-//print x < y;                    // false
-//print x <= y;                   // false
+print "comparison testing";
+
+print x > y;                    // true
+print x >= 10;                  // true
+print x < y;                    // false
+print x <= y;                   // false
 
 print x == 10;                  // true
 
 
-//print x != y;                   // true
+print x != y;                   // true
+
+print "end testing";
 
 // 4) Variable assignment and reassignment
 let foo = 5;
