@@ -14,7 +14,7 @@ public class Setta {
   static boolean hadRuntimeError = false;
 
   public static void main(String[] args) throws IOException {
-     runFile("setta/test2.setta");
+     runFile("setta/expo.setta");
     if (args.length > 1) {
       System.out.println("Usage: setta [script]");
       System.exit(64);

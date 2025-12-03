@@ -42,7 +42,7 @@ print foo;                      // 5
 foo = 20;
 print foo;                      // 20
 
-// 5) Set literals, membership, subset, equality, union, intersection
+// 5) Set literals, membership, subset, equality, union, intersection, cartesian
 let A = {1, 2, 3, 4};
 let B = {2, 3};
 print 5 in A;                   // false
@@ -50,6 +50,10 @@ print 2 in A;                   //true
 print A subseteq B;             // false
 print B subseteq A;             //true
 print A == B;                   // false
+
+print "CARTESIAN TEST";
+print A X B; 
+print "END CARTESIAN TEST";
 
 // union and intersect
 let A1 = {1, 2, 3};

@@ -1,0 +1,7 @@
+print "Hello! Welcome to Setta, a language in YOUR element!";
+print "Feel free to try out our language using any set theory problems you know!";
+print "For information on basic set operations, see 'Basic Set Operation Functionality' on the presentation board!";
+print "For more complex set functionality, see 'Set Builder Functionality' on the presentation board!";
+
+print "If you have any questions, or run into any issues, feel free to ask one of us!";
+print "Have Fun!!";
